@@ -20,7 +20,6 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - databases_network
-    command: --default-authentication-plugin=mysql_native_password
 
   # =============================================================================
   # MARIADB SERVICE (alternativa a MySQL)
