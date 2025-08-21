@@ -88,12 +88,7 @@ Write-Host "  URL: http://localhost:$(Get-EnvVar 'PGADMIN_PORT' '8080')" -Foregr
 Write-Host "  Email: $(Get-EnvVar 'PGADMIN_DEFAULT_EMAIL' 'admin@example.com')" -ForegroundColor White
 Write-Host "  Contraseña: $(Get-EnvVar 'PGADMIN_DEFAULT_PASSWORD' 'pgadminpassword123')" -ForegroundColor White
 
-Write-Host "`n🔧 Mongo Express (MongoDB):" -ForegroundColor Green
-Write-Host "  URL: http://localhost:$(Get-EnvVar 'MONGO_EXPRESS_PORT' '8082')" -ForegroundColor Cyan
-Write-Host "  Usuario: admin" -ForegroundColor White
-Write-Host "  Contraseña: $(Get-EnvVar 'MONGO_INITDB_ROOT_PASSWORD' 'mongopassword123')" -ForegroundColor White
-
-Write-Host "`n💡 Comandos útiles:" -ForegroundColor Cyan
+Write-Host "`n Comandos útiles:" -ForegroundColor Cyan
 Write-Host "  .\start.ps1 - Iniciar servicios" -ForegroundColor White
 Write-Host "  .\stop.ps1 - Detener servicios" -ForegroundColor White
 Write-Host "  docker-compose logs [servicio] - Ver logs" -ForegroundColor White

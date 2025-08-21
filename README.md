@@ -1,6 +1,7 @@
 # 🗄️ Multi-Database Docker Environment
 
-Este proyecto proporciona un entorno completo de bases de datos usando Docker Compose, incluyendo MySQL, MariaDB, PostgreSQL, SQL Server, MongoDB y Redis, junto con herramientas de administración web.
+Este proyecto proporciona un # Solo MongoDB
+docker-compose up -d mongodbtorno completo de bases de datos usando Docker Compose, incluyendo MySQL, MariaDB, PostgreSQL, SQL Server, MongoDB y Redis, junto con herramientas de administración web.
 
 ## 📋 Servicios Incluidos
 
@@ -16,7 +17,6 @@ Este proyecto proporciona un entorno completo de bases de datos usando Docker Co
 ### Herramientas de Administración
 
 - **pgAdmin** - Puerto 8080 (para PostgreSQL)
-- **Mongo Express** - Puerto 8082 (para MongoDB)
 
 ## 🚀 Instalación y Configuración
 
@@ -71,8 +71,8 @@ docker-compose up -d postgres pgadmin
 # Solo MySQL
 docker-compose up -d mysql
 
-# Solo MongoDB y Mongo Express
-docker-compose up -d mongodb mongo-express
+# Solo MongoDB
+docker-compose up -d mongodb
 ```
 
 ### Verificar el estado
@@ -151,12 +151,6 @@ docker-compose logs -f postgres
 - **URL:** <http://localhost:8080>
 - **Email:** <admin@example.com>
 - **Contraseña:** pgadminpassword123
-
-#### Mongo Express (MongoDB)
-
-- **URL:** <http://localhost:8082>
-- **Usuario:** admin
-- **Contraseña:** mongopassword123
 
 ## 📁 Persistencia de Datos
 
@@ -292,7 +286,6 @@ REDIS_PORT=6379
 
 # Herramientas web
 PGADMIN_PORT=8080
-MONGO_EXPRESS_PORT=8082
 ```
 
 Si tienes conflictos de puertos, simplemente cambia los valores en tu archivo `.env`. Por ejemplo:

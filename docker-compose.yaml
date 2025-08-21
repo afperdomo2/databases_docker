@@ -131,26 +131,6 @@ services:
     depends_on:
       - postgres
 
-  # =============================================================================
-  # MONGO EXPRESS SERVICE (Para administrar MongoDB)
-  # =============================================================================
-  mongo-express:
-    image: mongo-express:latest
-    container_name: mongo_express
-    restart: unless-stopped
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-      ME_CONFIG_MONGODB_SERVER: mongodb
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
-    ports:
-      - "${MONGO_EXPRESS_PORT}:8081"
-    networks:
-      - databases_network
-    depends_on:
-      - mongodb
-
 # =============================================================================
 # VOLUMES PARA PERSISTENCIA DE DATOS
 # =============================================================================

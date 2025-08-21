@@ -1,8 +1,7 @@
 # Script de inicialización para el entorno de bases de datos
 # Ejecutar con: .\start.ps1
-Write-Host "🌐 URLs de acceso:" -ForegroundColor Green
-Write-Host "  • pgAdmin: http://localhost:8080" -ForegroundColor Cyan
-Write-Host "  • Mongo Express: http://localhost:8082" -ForegroundColor Cyante-Host "🗄️  Iniciando entorno de bases de datos Docker..." -ForegroundColor Green
+
+Write-Host "🗄️  Iniciando entorno de bases de datos Docker..." -ForegroundColor Green
 
 # Verificar si Docker está ejecutándose
 Write-Host "Verificando Docker..." -ForegroundColor Yellow
@@ -42,14 +41,13 @@ Write-Host "  • SQL Server (Puerto 1433)" -ForegroundColor White
 Write-Host "  • MongoDB (Puerto 27017)" -ForegroundColor White
 Write-Host "  • Redis (Puerto 6379)" -ForegroundColor White
 Write-Host "  • pgAdmin (Puerto 8080)" -ForegroundColor White
-Write-Host "  • Mongo Express (Puerto 8082)" -ForegroundColor White
 
 # Preguntar qué servicios iniciar
 Write-Host "`n🚀 ¿Qué servicios deseas iniciar?" -ForegroundColor Green
 Write-Host "1. Todos los servicios" -ForegroundColor White
 Write-Host "2. Solo PostgreSQL + pgAdmin" -ForegroundColor White
 Write-Host "3. Solo MySQL" -ForegroundColor White
-Write-Host "4. Solo MongoDB + Mongo Express" -ForegroundColor White
+Write-Host "4. Solo MongoDB" -ForegroundColor White
 Write-Host "5. Personalizado" -ForegroundColor White
 
 $choice = Read-Host "Selecciona una opción (1-5)"
@@ -68,11 +66,11 @@ switch ($choice) {
         docker-compose up -d mysql
     }
     "4" { 
-        Write-Host "Iniciando MongoDB y Mongo Express..." -ForegroundColor Yellow
-        docker-compose up -d mongodb mongo-express
+        Write-Host "Iniciando MongoDB..." -ForegroundColor Yellow
+        docker-compose up -d mongodb
     }
     "5" { 
-        Write-Host "Servicios disponibles: mysql, mariadb, postgres, sqlserver, mongodb, redis, pgadmin, mongo-express" -ForegroundColor Cyan
+        Write-Host "Servicios disponibles: mysql, mariadb, postgres, sqlserver, mongodb, redis, pgadmin" -ForegroundColor Cyan
         $services = Read-Host "Ingresa los servicios separados por espacios"
         Write-Host "Iniciando servicios: $services" -ForegroundColor Yellow
         docker-compose up -d $services.Split(' ')
@@ -93,7 +91,6 @@ docker-compose ps
 # Mostrar URLs de acceso
 Write-Host "`n🌐 URLs de acceso:" -ForegroundColor Green
 Write-Host "  • pgAdmin: http://localhost:8080" -ForegroundColor Cyan
-Write-Host "  • Mongo Express: http://localhost:8082" -ForegroundColor Cyan
 
 Write-Host "`n✅ ¡Entorno iniciado correctamente!" -ForegroundColor Green
 Write-Host "💡 Usa 'docker-compose logs -f [servicio]' para ver los logs" -ForegroundColor Cyan
