@@ -16,6 +16,7 @@ Este proyecto proporciona una infraestructura completa de servicios para el desa
 ### Mensajería
 
 - **Kafka 4.1.1** - Puertos 9092 (interno), 9093 (externo)
+- **NATS** - Puerto 4222
 
 ### Herramientas de Administración
 
@@ -80,6 +81,9 @@ docker-compose up -d mongodb
 
 # Solo Kafka y Kafka UI
 docker-compose up -d kafka-dev kafka-ui-dev
+
+# Solo NATS
+docker-compose up -d nats-dev
 ```
 
 ### Verificar el estado
@@ -157,6 +161,12 @@ docker-compose logs -f postgres
 - **Puerto externo:** 9093
 - **Puerto interno:** 9092 (para contenedores)
 - **Bootstrap Servers:** localhost:9093
+
+#### NATS
+
+- **Host:** localhost
+- **Puerto:** 4222
+- **Token:** dev_token_123
 
 ### Herramientas de Administración Web
 
@@ -257,6 +267,11 @@ REDIS_PASSWORD=redispassword123
 # Kafka
 KAFKA_BOOTSTRAP_SERVERS=localhost:9093
 KAFKA_EXTERNAL_PORT=9093
+
+# NATS
+NATS_HOST=localhost
+NATS_PORT=4222
+NATS_TOKEN=dev_token_123
 ```
 
 ## 🔨 Comandos Útiles
@@ -311,6 +326,7 @@ REDIS_PORT=6379
 PGADMIN_PORT=8080
 KAFKA_UI_PORT=8083
 KAFKA_EXTERNAL_PORT=9093
+NATS_PORT=4222
 ```
 
 Si tienes conflictos de puertos, simplemente cambia los valores en tu archivo `.env`. Por ejemplo:
@@ -322,6 +338,7 @@ POSTGRES_PORT=5442
 PGADMIN_PORT=8090
 KAFKA_UI_PORT=8093
 KAFKA_EXTERNAL_PORT=9094
+NATS_PORT=4223
 ```
 
 ### Cambiar contraseñas

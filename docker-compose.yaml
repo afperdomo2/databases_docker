@@ -1,4 +1,4 @@
-name: infrastructure-services
+name: infrastructure
 
 services:
   # =============================================================================
@@ -63,20 +63,20 @@ services:
   # =============================================================================
   # SQL SERVER SERVICE
   # =============================================================================
-  sqlserver-dev:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: dev-sqlserver
-    restart: unless-stopped
-    environment:
-      SA_PASSWORD: ${SQLSERVER_SA_PASSWORD}
-      ACCEPT_EULA: "Y"
-      MSSQL_PID: "Express"
-    ports:
-      - "${SQLSERVER_PORT}:1433"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-    networks:
-      - dev-infrastructure
+  # sqlserver-dev:
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   container_name: dev-sqlserver
+  #   restart: unless-stopped
+  #   environment:
+  #     SA_PASSWORD: ${SQLSERVER_SA_PASSWORD}
+  #     ACCEPT_EULA: "Y"
+  #     MSSQL_PID: "Express"
+  #   ports:
+  #     - "${SQLSERVER_PORT}:1433"
+  #   volumes:
+  #     - sqlserver_data:/var/opt/mssql
+  #   networks:
+  #     - dev-infrastructure
 
   # =============================================================================
   # MONGODB SERVICE
@@ -168,6 +168,19 @@ services:
       - dev-infrastructure
     depends_on:
       - kafka-dev
+
+  # =============================================================================
+  # NATS SERVICE (Mensajería ligera)
+  # =============================================================================
+  nats-dev:
+    image: nats:latest
+    container_name: dev-nats
+    restart: unless-stopped
+    ports:
+      - "${NATS_PORT}:4222"
+    command: ["-auth", "${NATS_TOKEN}"]
+    networks:
+      - dev-infrastructure
 # =============================================================================
 # VOLUMES PARA PERSISTENCIA DE DATOS
 # =============================================================================
