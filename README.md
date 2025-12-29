@@ -1,7 +1,6 @@
-# 🗄️ Multi-Database Docker Environment
+# 🏗️ Development Infrastructure Services
 
-Este proyecto proporciona un # Solo MongoDB
-docker-compose up -d mongodbtorno completo de bases de datos usando Docker Compose, incluyendo MySQL, MariaDB, PostgreSQL, SQL Server, MongoDB y Redis, junto con herramientas de administración web.
+Este proyecto proporciona una infraestructura completa de servicios para el desarrollo de software usando Docker Compose, incluyendo bases de datos, mensajería y herramientas de administración web.
 
 ## 📋 Servicios Incluidos
 
@@ -14,9 +13,14 @@ docker-compose up -d mongodbtorno completo de bases de datos usando Docker Compo
 - **MongoDB 7.0** - Puerto 27017
 - **Redis 7.2** - Puerto 6379
 
+### Mensajería
+
+- **Kafka 4.1.1** - Puertos 9092 (interno), 9093 (externo)
+
 ### Herramientas de Administración
 
 - **pgAdmin** - Puerto 8080 (para PostgreSQL)
+- **Kafka UI** - Puerto 8083 (para Kafka)
 
 ## 🚀 Instalación y Configuración
 
@@ -73,6 +77,9 @@ docker-compose up -d mysql
 
 # Solo MongoDB
 docker-compose up -d mongodb
+
+# Solo Kafka y Kafka UI
+docker-compose up -d kafka-dev kafka-ui-dev
 ```
 
 ### Verificar el estado
@@ -144,6 +151,13 @@ docker-compose logs -f postgres
 - **Puerto:** 6379
 - **Contraseña:** redispassword123
 
+#### Kafka
+
+- **Host:** localhost
+- **Puerto externo:** 9093
+- **Puerto interno:** 9092 (para contenedores)
+- **Bootstrap Servers:** localhost:9093
+
 ### Herramientas de Administración Web
 
 #### pgAdmin (PostgreSQL)
@@ -151,6 +165,11 @@ docker-compose logs -f postgres
 - **URL:** <http://localhost:8080>
 - **Email:** <admin@example.com>
 - **Contraseña:** pgadminpassword123
+
+#### Kafka UI (Kafka)
+
+- **URL:** <http://localhost:8083>
+- **Cluster Name:** local
 
 ## 📁 Persistencia de Datos
 
@@ -234,6 +253,10 @@ MONGO_URI=mongodb://root:mongopassword123@localhost:27017/mi_aplicacion
 REDIS_HOST=localhost
 REDIS_PORT=6379
 REDIS_PASSWORD=redispassword123
+
+# Kafka
+KAFKA_BOOTSTRAP_SERVERS=localhost:9093
+KAFKA_EXTERNAL_PORT=9093
 ```
 
 ## 🔨 Comandos Útiles
@@ -286,6 +309,8 @@ REDIS_PORT=6379
 
 # Herramientas web
 PGADMIN_PORT=8080
+KAFKA_UI_PORT=8083
+KAFKA_EXTERNAL_PORT=9093
 ```
 
 Si tienes conflictos de puertos, simplemente cambia los valores en tu archivo `.env`. Por ejemplo:
@@ -295,6 +320,8 @@ Si tienes conflictos de puertos, simplemente cambia los valores en tu archivo `.
 MYSQL_PORT=3326
 POSTGRES_PORT=5442
 PGADMIN_PORT=8090
+KAFKA_UI_PORT=8093
+KAFKA_EXTERNAL_PORT=9094
 ```
 
 ### Cambiar contraseñas

@@ -1,12 +1,12 @@
-version: "3.8"
+name: infrastructure-services
 
 services:
   # =============================================================================
   # MYSQL/MARIADB SERVICE
   # =============================================================================
-  mysql:
+  mysql-dev:
     image: mysql:8.4
-    container_name: mysql
+    container_name: dev-mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -19,14 +19,14 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # MARIADB SERVICE (alternativa a MySQL)
   # =============================================================================
-  mariadb:
+  mariadb-dev:
     image: mariadb:11.4
-    container_name: mariadb
+    container_name: dev-mariadb
     restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -39,14 +39,14 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # POSTGRESQL SERVICE
   # =============================================================================
-  postgres:
+  postgres-dev:
     image: postgres:16
-    container_name: postgres
+    container_name: dev-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -58,14 +58,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # SQL SERVER SERVICE
   # =============================================================================
-  sqlserver:
+  sqlserver-dev:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver
+    container_name: dev-sqlserver
     restart: unless-stopped
     environment:
       SA_PASSWORD: ${SQLSERVER_SA_PASSWORD}
@@ -76,14 +76,14 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # MONGODB SERVICE
   # =============================================================================
-  mongodb:
+  mongodb-dev:
     image: mongo:8.0
-    container_name: mongodb
+    container_name: dev-mongodb
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -94,14 +94,14 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # REDIS SERVICE
   # =============================================================================
-  redis:
+  redis-dev:
     image: redis:7.4-alpine
-    container_name: redis
+    container_name: dev-redis
     restart: unless-stopped
     command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
     ports:
@@ -109,14 +109,14 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - databases_network
+      - dev-infrastructure
 
   # =============================================================================
   # PGADMIN SERVICE (Para administrar PostgreSQL)
   # =============================================================================
-  pgadmin:
+  pgadmin-dev:
     image: dpage/pgadmin4:latest
-    container_name: pgadmin4
+    container_name: dev-pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
@@ -127,10 +127,47 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
-      - databases_network
+      - dev-infrastructure
     depends_on:
-      - postgres
+      - postgres-dev
 
+  # --- MENSAJERÍA (Eventos de subastas) ---
+  # Usamos KRaft (sin Zookeeper) para ahorrar recursos
+  kafka-dev:
+    image: apache/kafka:4.1.1
+    container_name: dev-kafka
+    ports:
+      - "9092:9092" # Puerto interno para otros contenedores
+      - "${KAFKA_EXTERNAL_PORT}:9093" # Puerto externo para clientes en el host
+    environment:
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_LISTENERS=INTERNAL://:9092,EXTERNAL://:9093,CONTROLLER://:9094
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://kafka-dev:9092,EXTERNAL://localhost:${KAFKA_EXTERNAL_PORT}
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:9094
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+    networks:
+      - dev-infrastructure
+
+  # --- UI PARA KAFKA (Opcional, pero te ayudará mucho a ver los mensajes) ---
+  kafka-ui-dev:
+    image: provectuslabs/kafka-ui:latest
+    container_name: dev-kafka-ui
+    ports:
+      - "${KAFKA_UI_PORT}:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: ${KAFKA_UI_CLUSTER_NAME}
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: ${KAFKA_UI_BOOTSTRAP_SERVERS}
+    networks:
+      - dev-infrastructure
+    depends_on:
+      - kafka-dev
 # =============================================================================
 # VOLUMES PARA PERSISTENCIA DE DATOS
 # =============================================================================
@@ -156,6 +193,6 @@ volumes:
 # NETWORK CONFIGURATION
 # =============================================================================
 networks:
-  databases_network:
+  dev-infrastructure:
     driver: bridge
     external: false
