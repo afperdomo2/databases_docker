@@ -45,7 +45,7 @@ services:
   # POSTGRESQL SERVICE
   # =============================================================================
   postgres-dev:
-    image: postgres:16
+    image: postgres:16-alpine
     container_name: dev-postgres
     restart: unless-stopped
     environment:
@@ -63,20 +63,20 @@ services:
   # =============================================================================
   # SQL SERVER SERVICE
   # =============================================================================
-  # sqlserver-dev:
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   container_name: dev-sqlserver
-  #   restart: unless-stopped
-  #   environment:
-  #     SA_PASSWORD: ${SQLSERVER_SA_PASSWORD}
-  #     ACCEPT_EULA: "Y"
-  #     MSSQL_PID: "Express"
-  #   ports:
-  #     - "${SQLSERVER_PORT}:1433"
-  #   volumes:
-  #     - sqlserver_data:/var/opt/mssql
-  #   networks:
-  #     - dev-infrastructure
+  sqlserver-dev:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: dev-sqlserver
+    restart: unless-stopped
+    environment:
+      SA_PASSWORD: ${SQLSERVER_SA_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "${SQLSERVER_PORT}:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - dev-infrastructure
 
   # =============================================================================
   # MONGODB SERVICE
