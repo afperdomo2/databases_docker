@@ -181,6 +181,23 @@ services:
     command: ["-auth", "${NATS_TOKEN}"]
     networks:
       - dev-infrastructure
+
+  # =============================================================================
+  # DOZZLE SERVICE (Log viewer para todos los contenedores)
+  # =============================================================================
+  dozzle-dev:
+    image: amir20/dozzle:v10.10.0
+    container_name: dev-dozzle
+    restart: unless-stopped
+    ports:
+      - "${DOZZLE_PORT}:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOZZLE_ENABLE_ACTIONS: "true"
+    networks:
+      - dev-infrastructure
+
 # =============================================================================
 # VOLUMES PARA PERSISTENCIA DE DATOS
 # =============================================================================
